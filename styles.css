@@ -6,6 +6,11 @@
     font-family: 'Dhurjati', sans-serif !important;
 }
 
+html,
+body {
+    background: #000;
+}
+
 h1,
 h2,
 h3,

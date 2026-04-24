@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // After fade out, remove from DOM flow and show main content
         setTimeout(() => {
-            entranceOverlay.style.display = 'none';
+            entranceOverlay.style.display = 'hidden';
             mainContent.classList.remove('hidden');
 
             // Trigger main content fade-in
