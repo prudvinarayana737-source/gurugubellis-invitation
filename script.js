@@ -10,6 +10,46 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let audioPlaying = false;
 
+    const items = document.querySelectorAll('.event-card');
+
+    function handleScroll() {
+        const middle = window.innerHeight / 2;
+
+        items.forEach(item => {
+            const rect = item.getBoundingClientRect();
+            const itemCenter = rect.top + rect.height / 2;
+
+            const distance = Math.abs(middle - itemCenter);
+
+            // Normalize distance (0 = center, 1 = far)
+            const maxDistance = window.innerHeight / 2;
+            const scale = 1 - Math.min(distance / maxDistance, 1) * 0.1;
+
+            // Apply smooth transform
+            item.style.transform = `scale(${scale}) translateY(${(middle - itemCenter) * 0.05}px)`;
+
+            // Glow effect when near center
+            if (distance < 100) {
+                item.style.boxShadow = "0 0 25px gold";
+            } else {
+                item.style.boxShadow = "0 0 10px rgba(255,255,255,0.1)";
+            }
+        });
+    }
+
+    // 🔥 Use requestAnimationFrame (SUPER SMOOTH)
+    let ticking = false;
+
+    window.addEventListener('scroll', () => {
+        if (!ticking) {
+            window.requestAnimationFrame(() => {
+                handleScroll();
+                ticking = false;
+            });
+            ticking = true;
+        }
+    });
+
     // Loader Logic
     window.addEventListener('load', () => {
         setTimeout(() => {
@@ -41,7 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // After fade out, remove from DOM flow and show main content
         setTimeout(() => {
-            entranceOverlay.style.display = 'hidden';
+            entranceOverlay.style.display = 'none';
             mainContent.classList.remove('hidden');
 
             // Trigger main content fade-in
@@ -68,27 +108,27 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             // Continuous scroll-linked movement (parallax)
-            window.addEventListener('scroll', () => {
-                const scrolled = window.pageYOffset;
-                fadeItems.forEach((item, index) => {
-                    const rect = item.getBoundingClientRect();
-                    const viewHeight = window.innerHeight;
+            // window.addEventListener('scroll', () => {
+            //     const scrolled = window.pageYOffset;
+            //     fadeItems.forEach((item, index) => {
+            //         const rect = item.getBoundingClientRect();
+            //         const viewHeight = window.innerHeight;
 
-                    // Only move if visible
-                    if (rect.top < viewHeight && rect.bottom > 0) {
-                        const relativePos = (rect.top + rect.height / 2) / viewHeight;
-                        const movement = (relativePos - 0.5) * 40; // Subtle drift
+            //         // Only move if visible
+            //         if (rect.top < viewHeight && rect.bottom > 0) {
+            //             const relativePos = (rect.top + rect.height / 2) / viewHeight;
+            //             const movement = (relativePos - 0.5) * 40; // Subtle drift
 
-                        if (item.classList.contains('left')) {
-                            item.style.transform = `translateX(${movement}px)`;
-                        } else if (item.classList.contains('right')) {
-                            item.style.transform = `translateX(${-movement}px)`;
-                        } else {
-                            item.style.transform = `translateY(${movement * 0.5}px)`;
-                        }
-                    }
-                });
-            });
+            //             if (item.classList.contains('left')) {
+            //                 item.style.transform = `translateX(${movement}px)`;
+            //             } else if (item.classList.contains('right')) {
+            //                 item.style.transform = `translateX(${-movement}px)`;
+            //             } else {
+            //                 item.style.transform = `translateY(${movement * 0.5}px)`;
+            //             }
+            //         }
+            //     });
+            // });
 
             audioBtn.classList.remove('hidden');
 
