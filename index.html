@@ -59,6 +59,32 @@
                 font-size: 32px;
             }
         }
+
+        @keyframes pulse {
+            0% {
+                opacity: 0.5;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        .pointing-hand {
+            display: inline-block;
+            animation: nudge 1s infinite alternate ease-in-out;
+            margin-left: 5px;
+        }
+
+        @keyframes nudge {
+            from {
+                transform: translateX(0);
+            }
+
+            to {
+                transform: translateX(10px);
+            }
+        }
     </style>
 </head>
 
@@ -96,8 +122,11 @@
 
             <img src="la.png" alt="Bride and Groom" fetchpriority="high"
                 style="width: 280px; max-width: 80vw; animation: pulse 2s infinite alternate; margin-bottom: 25px; filter: drop-shadow(0px 0px 20px rgba(212,175,55,0.8));">
-            <span class="pulse-text" data-te="ప్రవేశించండి" data-en="Enter"
-                style="font-size: 20px; display: inline-block; margin-top: 15px;">ప్రవేశించండి</span>
+            <div style="display: flex; align-items: center; gap: 10px; margin-top: 15px;">
+                <span class="pulse-text" data-te="ప్రవేశించండి" data-en="Enter"
+                    style="font-size: 20px; display: inline-block;">ప్రవేశించండి</span>
+                <span class="pointing-hand" style="font-size: 28px;">👈</span>
+            </div>
         </div>
     </div>
 
@@ -106,7 +135,8 @@
         <div class="glass-card">
 
             <div class="fade-item item-1 left">
-                <h4 class="god-text" data-te="శ్రీరస్తు &nbsp;&bull;&nbsp; శుభమస్తు &nbsp;&bull;&nbsp; అవిఘ్నమస్తు"
+                <h4 class="god-text" id="god-text"
+                    data-te="శ్రీరస్తు &nbsp;&bull;&nbsp; శుభమస్తు &nbsp;&bull;&nbsp; అవిఘ్నమస్తు"
                     data-en="Srirasthu &nbsp;&bull;&nbsp; Shubhamasthu &nbsp;&bull;&nbsp; Avighnamasthu"
                     style="font-size: 18px;">శ్రీరస్తు &nbsp;&bull;&nbsp; శుభమస్తు &nbsp;&bull;&nbsp; అవిఘ్నమస్తు</h4>
                 <h1 class="main-title" data-te="గురుగుబెల్లి వారి కళ్యాణ శుభలేఖ"
@@ -220,6 +250,11 @@
             </div>
 
         </div>
+    </div>
+
+    <!-- Floating Scroll Button -->
+    <div id="scrollBtn" class="scroll-btn hidden">
+        <span class="arrow">↓</span>
     </div>
 
     <script src="script.js"></script>

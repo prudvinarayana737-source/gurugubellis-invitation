@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const mainContent = document.getElementById('mainContent');
     const bgMusic = document.getElementById('bgMusic');
     const fadeItems = document.querySelectorAll('.fade-item');
+    const scrollBtn = document.getElementById('scrollBtn');
 
     let audioPlaying = false;
 
@@ -52,28 +53,45 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Loader Logic - Wait for EVERYTHING (images, audio, etc.) to load
     window.addEventListener('load', () => {
-        if (loader) {
+        hideLoader();
+    });
+
+    // Fallback loader hide (after 5 seconds)
+    setTimeout(hideLoader, 5000);
+
+    function hideLoader() {
+        if (loader && loader.style.display !== 'none') {
             loader.classList.add('fade-out');
             setTimeout(() => {
                 loader.style.display = 'none';
             }, 800);
         }
-    });
+    }
 
     // Disable scrolling on initial load
     document.body.style.overflow = 'hidden';
 
+
+
     // Handle Entry
     enterBtn.addEventListener('click', () => {
 
-        // Try to play local audio IMMEDIATE
+        // Try to play local audio
         if (bgMusic) {
-            // Since preload is "none", we may need to call load() first or just play()
-            bgMusic.load(); 
+            bgMusic.muted = false; // Ensure unmuted
             bgMusic.play().then(() => {
+                console.log("Audio playing successfully");
                 audioPlaying = true;
             }).catch(e => {
-                console.log("Audio play failed:", e);
+                console.warn("Audio play failed (likely autoplay policy):", e);
+                // Attempt to play on next user interaction
+                const playOnInteraction = () => {
+                    bgMusic.play().then(() => {
+                        audioPlaying = true;
+                        document.removeEventListener('click', playOnInteraction);
+                    }).catch(() => { });
+                };
+                document.addEventListener('click', playOnInteraction);
             });
         }
 
@@ -131,10 +149,63 @@ document.addEventListener('DOMContentLoaded', () => {
             //     });
             // });
 
-            audioBtn.classList.remove('hidden');
+
+
+
+            if (scrollBtn) scrollBtn.classList.remove('hidden');
 
         }, 1500); // Wait a bit longer for the music to start before showing content
     });
+
+    // Scroll Button Logic
+    if (scrollBtn) {
+        scrollBtn.addEventListener('click', () => {
+            const targets = [
+                document.querySelector('.image-frame'),
+                document.querySelector('.couple-names'),
+                ...document.querySelectorAll('.event-card')
+            ].filter(el => el !== null);
+
+            const currentScroll = window.scrollY;
+            let nextTarget = null;
+
+            // Find the first target that is currently below our view
+            for (const target of targets) {
+                const rect = target.getBoundingClientRect();
+                // If the top of the element is more than 50px below the top of the screen
+                if (rect.top > 50) {
+                    nextTarget = target;
+                    break;
+                }
+            }
+
+            if (nextTarget) {
+                // Scroll to the next section
+                const offset = 20; // Small padding from the top
+                const bodyRect = document.body.getBoundingClientRect().top;
+                const elementRect = nextTarget.getBoundingClientRect().top;
+                const elementPosition = elementRect - bodyRect;
+                const offsetPosition = elementPosition - offset;
+
+                window.scrollTo({
+                    top: offsetPosition,
+                    behavior: 'smooth'
+                });
+            } else {
+                // If no next target (we are at the end), scroll back to the header section (Srirasthu)
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        });
+
+        // Update arrow direction on scroll
+        window.addEventListener('scroll', () => {
+            const isAtBottom = (window.innerHeight + window.scrollY) >= document.body.offsetHeight - 100;
+            const arrow = scrollBtn.querySelector('.arrow');
+            if (arrow) {
+                arrow.innerText = isAtBottom ? '↑' : '↓';
+            }
+        });
+    }
 
 
 
