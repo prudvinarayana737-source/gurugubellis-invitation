@@ -326,6 +326,7 @@ body {
         filter: drop-shadow(0 0 5px gold);
         transform: scale(1);
     }
+
     to {
         filter: drop-shadow(0 0 15px gold);
         transform: scale(1.1);
@@ -551,10 +552,10 @@ body.lang-en .main-title {
 ========================= */
 .scroll-btn {
     position: fixed;
-    bottom: 25px;
+    bottom: 30px;
     right: 25px;
-    width: 40px;
-    height: 40px;
+    width: 55px;
+    height: 55px;
     background: rgba(0, 0, 0, 0.3);
     border: 1.5px solid rgba(212, 175, 55, 0.6);
     border-radius: 50%;
@@ -579,12 +580,19 @@ body.lang-en .main-title {
 }
 
 @keyframes bounce {
-    0%, 20%, 50%, 80%, 100% {
+
+    0%,
+    20%,
+    50%,
+    80%,
+    100% {
         transform: translateY(0);
     }
+
     40% {
         transform: translateY(-10px);
     }
+
     60% {
         transform: translateY(-5px);
     }
