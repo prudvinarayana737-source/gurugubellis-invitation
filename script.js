@@ -50,27 +50,22 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Loader Logic - Hide faster (don't wait for all assets)
-    const hideLoader = () => {
-        if (loader && !loader.classList.contains('fade-out')) {
+    // Loader Logic - Wait for EVERYTHING (images, audio, etc.) to load
+    window.addEventListener('load', () => {
+        if (loader) {
             loader.classList.add('fade-out');
             setTimeout(() => {
                 loader.style.display = 'none';
             }, 800);
         }
-    };
-
-    // Hide loader after 1.5s regardless of asset status for immediate feel
-    setTimeout(hideLoader, 1500);
-
-    // Also hide if window finishes loading earlier
-    window.addEventListener('load', hideLoader);
+    });
 
     // Disable scrolling on initial load
     document.body.style.overflow = 'hidden';
 
     // Handle Entry
     enterBtn.addEventListener('click', () => {
+
         // Try to play local audio IMMEDIATE
         if (bgMusic) {
             // Since preload is "none", we may need to call load() first or just play()
